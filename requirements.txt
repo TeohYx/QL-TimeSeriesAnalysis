@@ -6,3 +6,4 @@ pandas
 numpy
 keyboard
 yfinance
+psutil
