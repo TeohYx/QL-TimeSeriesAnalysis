@@ -6,4 +6,3 @@ pandas
 numpy
 keyboard
 yfinance
-fbprophet
