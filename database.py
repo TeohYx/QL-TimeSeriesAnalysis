@@ -108,7 +108,7 @@ class Database():
 def main():
     db = Database()
     mean, std = db.get_mean_and_std()
-    sm = db.extract_data_from_yfinance("ZMH24.CBT", '90d')
+    sm = db.extract_data_from_yfinance("ZMH24.CBT", '1y')
     sm = sm[-45:]
     sm_close = sm['Close']
     sm_close_stz = db.standardize_data(sm_close, mean, std)
