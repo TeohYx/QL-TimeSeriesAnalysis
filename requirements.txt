@@ -1,0 +1,9 @@
+tensorflow
+matplotlib
+plotly
+streamlit
+pandas
+numpy
+keyboard
+yfinance
+fbprophet
