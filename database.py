@@ -2,6 +2,8 @@ import pandas as pd
 import os
 import yfinance as yf
 import numpy as np
+import streamlit as st
+import time
 
 """
 IMPORTANT:
@@ -15,6 +17,26 @@ DATA_FILE = "dataset/data.csv"
 MEAN_FILE = "dataset/mean.csv"
 STD_FILE = "dataset/std.csv"
 
+@st.cache_data()
+def load_csv():
+    # st.write("Cache miss: expensive_computation(", a, ",", b, ") ran")
+    time.sleep(2)  # This makes the function take 2s to run
+
+    mean_s = pd.read_csv(MEAN_FILE, index_col=0, header=None)
+    std_s = pd.read_csv(STD_FILE, index_col=0, header=None)
+    data_s = pd.read_csv(DATA_FILE, index_col=0)
+
+    return mean_s, std_s, data_s
+
+@st.cache_data(ttl=3600)
+def load_data(symbol, period):
+    time.sleep(2)
+    sm = yf.download(symbol, period=period)
+    return sm
+
+# def 
+
+
 class Database():
     """
     df - dataframe that is fed in the model (in standardized form, (x-mean)/std)
@@ -22,9 +44,10 @@ class Database():
     std_s - series of standard deviation including all column in df
     """
     def __init__(self):
-        self.mean_s = pd.read_csv(MEAN_FILE, index_col=0, header=None)
-        self.std_s = pd.read_csv(STD_FILE, index_col=0, header=None)
-        self.df = pd.read_csv(DATA_FILE, index_col=0)
+        self.mean_s = None
+        self.std_s = None
+        self.df = None
+        self.mean_s, self.std_s, self.df = load_csv()
 
     def get_mean_and_std(self, name="Price US Soybean Meal"):
         mean = self.mean_s.loc[name].values[0]
@@ -97,9 +120,10 @@ class Database():
 
         # print(extend_df)
         return extend_df
-
+    
     def extract_data_from_yfinance(self, symbol, period):
-        sm = yf.download(symbol, period=period)
+        time.sleep(2)
+        sm = load_data(symbol, period)
         return sm
     
     def form_prediction_set():
@@ -108,7 +132,7 @@ class Database():
 def main():
     db = Database()
     mean, std = db.get_mean_and_std()
-    sm = db.extract_data_from_yfinance("ZMH24.CBT", '1y')
+    sm = db.extract_data_from_yfinance("ZMH24.CBT", 'max')
     sm = sm[-45:]
     sm_close = sm['Close']
     sm_close_stz = db.standardize_data(sm_close, mean, std)
