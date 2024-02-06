@@ -13,7 +13,7 @@ from model_scripts import LSTM_10days as LSTM_10days
 import matplotlib.pyplot as plt
 import plotly.express as px
 
-# from prophet import Prophet
+from prophet import Prophet
 
 # from fbprophet import Prophet
 # from fbprophet.plot import plot_plotly
@@ -54,7 +54,7 @@ def refresh():
     """
     refresh the page
     """
-    print("IMHERE")
+    print("Done refreshing")
 
 def predict_LSTM_10days(db):
     """
@@ -123,8 +123,8 @@ def get_history_data(db, date=None):
     """
     Return data from historical data to the date specified, if None it will be up to the latest date.
     """
-    print("check")
-    print(db.df)
+    # print("check")
+    # print(db.df)
     history_df = db.df
     his_df = history_df
     history_df.index = pd.to_datetime(history_df.index, format="%d/%m/%Y")
@@ -160,30 +160,32 @@ def get_history_to_latest_data(db, hist_data):
     combined_df = pd.DataFrame(columns = ["Close Price"])
     combined_df['Close Price'] = combined_series
 
-    print(combined_df)
+    # print(combined_df)
 
     return combined_df
 
-def predict_prophet(db):
+def predict_prophet(historical_to_latest_data):
+    # print(historical_to_latest_data)
     prophet = pd.read_csv("Prophet.csv", index_col=1)
     prophet = prophet.iloc[:, 1:]
     
     st.text("")
     st.subheader("Yearly Forecasting")
     st.line_chart(prophet)  
-
+    # prophet = historical_to_latest_data
     # prophet = prophet.set_index(prophet.Date)
-    # print(prophet)
+    # print(prophet.index.astype)
 
-    # historical_data = get_history_data(db)
-    # print(historical_data)
-    # input_data = pd.DataFrame(historical_data)
+    # # historical_data = get_history_data(db)
+    # # print(historical_data)
+    # input_data = pd.DataFrame(historical_to_latest_data)
+    # # print(input_data)
     # input_data = input_data.reset_index()
     # input_data = input_data.rename(columns={'index': 'Date'})
     # print(input_data)
     # print(input_data["Date"].astype)
-
-    # # Predict wif prophet
+    # input_data = input_data.rename(columns={'Date': 'ds', 'Close Price': 'y'})
+    # # # Predict wif prophet
     # model = Prophet(interval_width=0.95)
     # model.fit(input_data)
 
@@ -191,7 +193,7 @@ def predict_prophet(db):
     # print(future_dates)
 
     # forecast = model.predict(future_dates)
-    # # forecast[['Date', 'Close', 'yhat_lower', 'yhat_upper']].head()
+    # forecast[['ds', 'y', 'yhat_lower', 'yhat_upper']].head()
     # print(forecast)
 
 def display_yearly(db):
@@ -227,7 +229,10 @@ def display_yearly(db):
             xaxis=(dict(showgrid=False))
         )
 
-        st.dataframe(historical_to_latest_data.groupby(["Yearly", "Monthly"])["Close Price"].last().unstack())
+        data = historical_to_latest_data.groupby(["Yearly", "Monthly"])["Close Price"].last().round(1).unstack()
+        data.loc[1995, 1] = data.loc[1994, 12]
+
+        st.dataframe(data)
         st.plotly_chart(fig_price_by_month, theme=None, use_container_width=True)
 
     with tab2:
@@ -247,7 +252,10 @@ def display_yearly(db):
             xaxis=(dict(showgrid=False))
         )
 
-        st.dataframe(historical_to_latest_data.groupby(["Yearly", "Monthly"])["Close Price"].mean().round(1).unstack())
+        data = historical_to_latest_data.groupby(["Yearly", "Monthly"])["Close Price"].mean().round(1).unstack()
+        data.loc[1995, 1] = data.loc[1994, 12]
+
+        st.dataframe(data)
         st.plotly_chart(fig_price_by_month, theme=None, use_container_width=True)
 
 def main():
@@ -255,7 +263,9 @@ def main():
     # model = Model()
 
     historical_data = get_history_data(db, "01/01/2015")
-    historical_to_latest_data = get_history_to_latest_data(db, historical_data)
+    all_historical_data = get_history_data(db)
+    historical_to_latest_data = get_history_to_latest_data(db, all_historical_data)
+    historical_to_latest_data_2015 = get_history_to_latest_data(db, historical_data)
 
     latest_date = gather_basic_information(db)  
     st.title("Time Series Analysis")
@@ -265,7 +275,7 @@ def main():
     st.markdown(f"Historical Data since 2015")
 
     # Display historical data
-    st.line_chart(historical_to_latest_data, y="Close Price")
+    st.line_chart(historical_to_latest_data_2015, y="Close Price")
 
     # Diplay data by year
     display_yearly(db)
@@ -274,7 +284,7 @@ def main():
     predict_LSTM_10days(db)
 
     # Yearly forecasting
-    predict_prophet(db)
+    predict_prophet(historical_to_latest_data)
 
     exit_app = st.sidebar.button("Shut Down")
     refresh_app = st.sidebar.button("Refresh")
