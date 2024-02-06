@@ -13,7 +13,7 @@ from model_scripts import LSTM_10days as LSTM_10days
 import matplotlib.pyplot as plt
 import plotly.express as px
 
-from prophet import Prophet
+# from prophet import Prophet
 
 # from fbprophet import Prophet
 # from fbprophet.plot import plot_plotly
