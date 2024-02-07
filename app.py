@@ -531,11 +531,11 @@ def main():
     # Yearly forecasting
     predict_prophet(historical_to_latest_data)
 
-    exit_app = st.sidebar.button("Shut Down")
+    # exit_app = st.sidebar.button("Shut Down")
     refresh_app = st.sidebar.button("Refresh")
 
-    if exit_app:
-        quit()
+    # if exit_app:
+    #     quit()
 
     if refresh_app:
         refresh()
