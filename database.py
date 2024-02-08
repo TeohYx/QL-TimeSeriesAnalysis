@@ -29,7 +29,7 @@ def load_csv():
     return mean_s, std_s, data_s
 
 @st.cache_data()
-def load_data(symbol, period):
+def load_data(symbol, period, today):
     time.sleep(2)
     sm = yf.download(symbol, period=period)
     return sm
@@ -121,9 +121,9 @@ class Database():
         # print(extend_df)
         return extend_df
     
-    def extract_data_from_yfinance(self, symbol, period):
+    def extract_data_from_yfinance(self, symbol, period, today):
         time.sleep(2)
-        sm = load_data(symbol, period)
+        sm = load_data(symbol, period, today)
         return sm
     
     def form_prediction_set():

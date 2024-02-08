@@ -1,11 +1,11 @@
 import pandas as pd
 import numpy as np
 
-def prediction_data_for_LSTM_10days(db, n_forecast, n_window, symbol, time_step):
+def prediction_data_for_LSTM_10days(db, n_forecast, n_window, symbol, time_step, today):
     # Get the mean and std of close price if not specify
     mean, std = db.get_mean_and_std()
 
-    sm = db.extract_data_from_yfinance(symbol, time_step)
+    sm = db.extract_data_from_yfinance(symbol, time_step, today)
     sm = sm[-n_window:]
     sm_close = sm['Close']
     # This standardize_data function takes Series, not DataFrame

@@ -15,6 +15,7 @@ import plotly.express as px
 
 from prophet import Prophet
 
+from datetime import date
 # from fbprophet import Prophet
 # from fbprophet.plot import plot_plotly
 # import plotly.offline as py
@@ -56,7 +57,7 @@ def refresh():
     """
     print("Done refreshing")
 
-def predict_LSTM_10days(db):
+def predict_LSTM_10days(db, today):
     """
     Model format: name, model, n_forecast, n_window, n_feature
     """
@@ -71,7 +72,7 @@ def predict_LSTM_10days(db):
     # with wtab1:
     trained_model = Model("LSTM_10days", "model/LSTM_10days.h5", 10, 45, 4)
     model = trained_model.load_model()
-    window_size_data, extend_data, window_normal_data = LSTM_10days.prediction_data_for_LSTM_10days(db, trained_model.n_forecast, trained_model.n_window, "ZMH24.CBT", '1y')
+    window_size_data, extend_data, window_normal_data = LSTM_10days.prediction_data_for_LSTM_10days(db, trained_model.n_forecast, trained_model.n_window, "ZMH24.CBT", '1y', today)
     # print(window_normal_data)
     reference_start = window_normal_data.index[0]
     reference_end = window_normal_data.index[-1]
@@ -95,7 +96,7 @@ def predict_LSTM_10days(db):
 
     combine = pd.concat([window_normal_data, pred], axis=1)
     combine.iloc[len(window_normal_data)-1, 1] = combine.iloc[len(window_normal_data)-1, 0]
-
+    print(actual_prediction)
     result = ""
     difference = actual_prediction["Prediction"].iloc[-1] - actual_prediction["Prediction"].iloc[0]
     slope = difference / trained_model.n_forecast
@@ -132,14 +133,14 @@ def get_history_data(db, date=None):
 
     return his_df
 
-def get_history_to_latest_data(db, hist_data):
+def get_history_to_latest_data(db, hist_data, today):
     """
     combine date from earliest of "hist_data" to latest of "db"
     """
     latest_data = hist_data.index[-1]
 
 
-    sm = db.extract_data_from_yfinance("ZMH24.CBT", '1y')
+    sm = db.extract_data_from_yfinance("ZMH24.CBT", '1y', today)
     # print(sm)
     # print(latest_data)
 
@@ -247,12 +248,12 @@ def predict_prophet(historical_to_latest_data):
     st.markdown(f"Based on the prediction, the highest price predicted are :green[{price_max.round(1)} ({date_max})]; while the lowest price predicted are :red[{price_min.round(1)} ({date_min})]")
 
 
-def display_yearly(db):
+def display_yearly(db, today):
     print("Displaying yearly data")
     st.subheader("Price by Month")
 
     historical_data = get_history_data(db)
-    historical_to_latest_data = get_history_to_latest_data(db, historical_data)
+    historical_to_latest_data = get_history_to_latest_data(db, historical_data, today)
 
     print(historical_to_latest_data.index.astype)
 
@@ -311,12 +312,14 @@ def display_yearly(db):
 
 def main():
     db = Database()
+    today = date.today()
+    print(f"Today: {today}")
     # model = Model()
 
     historical_data = get_history_data(db, "01/01/2015")
     all_historical_data = get_history_data(db)
-    historical_to_latest_data = get_history_to_latest_data(db, all_historical_data)
-    historical_to_latest_data_2015 = get_history_to_latest_data(db, historical_data)
+    historical_to_latest_data = get_history_to_latest_data(db, all_historical_data, today)
+    historical_to_latest_data_2015 = get_history_to_latest_data(db, historical_data, today)
 
     latest_date = gather_basic_information(db)  
     st.title("Time Series Analysis")
@@ -329,10 +332,10 @@ def main():
     st.line_chart(historical_to_latest_data_2015, y="Close Price")
 
     # Diplay data by year
-    display_yearly(db)
+    display_yearly(db, today)
 
     # Daily forecasting 
-    predict_LSTM_10days(db)
+    predict_LSTM_10days(db, today)
 
     # Yearly forecasting
     predict_prophet(historical_to_latest_data)
