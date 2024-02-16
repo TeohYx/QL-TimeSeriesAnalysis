@@ -32,6 +32,7 @@ def load_csv():
 def load_data(symbol, period, today):
     time.sleep(2)
     sm = yf.download(symbol, period=period)
+    print(f"sm data is: {sm}")
     return sm
 
 # def 
@@ -122,7 +123,6 @@ class Database():
         return extend_df
     
     def extract_data_from_yfinance(self, symbol, period, today):
-        time.sleep(2)
         sm = load_data(symbol, period, today)
         return sm
     

@@ -21,16 +21,12 @@ def prediction_data_for_LSTM_10days(db, n_forecast, n_window, symbol, time_step,
 
 def predict(model, window_df, future_df):
     n_forecast = future_df.shape[0]
-    # print(window_df.shape)
-    # print(future_df.shape)
 
     test_predictions = []
     first_eval_batch = window_df.to_numpy()
-    # print(first_eval_batch)
-    # print(window_df.shape[0])
-    # print(window_df.shape[1])
+
     current_batch = first_eval_batch.reshape((1, window_df.shape[0], window_df.shape[1]))
-    # print(current_batch)
+
     for i in range(n_forecast):
         current_pred = model.predict(current_batch)[0]
         test_predictions.append(current_pred[0])
