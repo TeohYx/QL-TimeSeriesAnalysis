@@ -6,6 +6,7 @@ def prediction_data_for_LSTM_10days(db, n_forecast, n_window, symbol, time_step,
     mean, std = db.get_mean_and_std()
 
     sm = db.extract_data_from_yfinance(symbol, time_step, today)
+    print(f"data from yfinance: {sm}")
     sm = sm[-n_window:]
     sm_close = sm['Close']
     # This standardize_data function takes Series, not DataFrame
