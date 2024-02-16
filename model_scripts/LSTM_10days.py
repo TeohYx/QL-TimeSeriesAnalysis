@@ -15,7 +15,7 @@ def prediction_data_for_LSTM_10days(db, n_forecast, n_window, symbol, time_step,
     data = db.add_lags(data)
     extend_data = db.add_future_lags(n_forecast, data)
 
-    print(extend_data)
+    # print(extend_data)
 
     return data, extend_data, sm_close
 

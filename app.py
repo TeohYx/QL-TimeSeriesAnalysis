@@ -96,7 +96,7 @@ def predict_LSTM_10days(db, today):
 
     combine = pd.concat([window_normal_data, pred], axis=1)
     combine.iloc[len(window_normal_data)-1, 1] = combine.iloc[len(window_normal_data)-1, 0]
-    print(actual_prediction)
+    # print(actual_prediction)
     result = ""
     difference = actual_prediction["Prediction"].iloc[-1] - actual_prediction["Prediction"].iloc[0]
     slope = difference / trained_model.n_forecast
@@ -193,7 +193,7 @@ def predict_prophet(historical_to_latest_data):
         Daily filter
         """
         year = fc.copy()
-        print(year)
+        # print(year)
         st.line_chart(year)
     with dtab2:
         """
@@ -203,7 +203,7 @@ def predict_prophet(historical_to_latest_data):
         week["Year"] = week.index.year
         week.index = pd.to_datetime(week.index)
         week = week.reset_index()
-        print(week["ds"].dt.isocalendar().week.apply(lambda x: "0" + str(x) if len(str(x))==1 else str(x)))
+        # print(week["ds"].dt.isocalendar().week.apply(lambda x: "0" + str(x) if len(str(x))==1 else str(x)))
         week["Week"] = week["ds"].dt.isocalendar().week.apply(lambda x: "0" + str(x) if len(str(x))==1 else str(x))
 
         # print(week)
@@ -238,13 +238,13 @@ def predict_prophet(historical_to_latest_data):
 
     price_max = year["yhat"].max()
     date_max = str(year.index[year["yhat"] == price_max].values[0]).split("T")[0]
-    print("thisshi")
-    print(str(year.index[year["yhat"] == price_max].values[0]).strip("T"))
+    # print("thisshi")
+    # print(str(year.index[year["yhat"] == price_max].values[0]).strip("T"))
     price_min = year["yhat"].min()
     date_min = str(year.index[year["yhat"] == price_min].values[0]).split("T")[0]
-    print(f"{price_max}")
+    # print(f"{price_max}")
 
-    print(f"{date_max}")
+    # print(f"{date_max}")
     st.markdown(f"Based on the prediction, the highest price predicted are :green[{price_max.round(1)} ({date_max})]; while the lowest price predicted are :red[{price_min.round(1)} ({date_min})]")
 
 
@@ -255,7 +255,7 @@ def display_yearly(db, today):
     historical_data = get_history_data(db)
     historical_to_latest_data = get_history_to_latest_data(db, historical_data, today)
 
-    print(historical_to_latest_data.index.astype)
+    # print(historical_to_latest_data.index.astype)
 
     years = historical_to_latest_data.index.year
     
