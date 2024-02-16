@@ -28,7 +28,7 @@ def load_csv():
 
     return mean_s, std_s, data_s
 
-@st.cache_data(ttf="1d")
+@st.cache_data(ttl="1d")
 def load_data(symbol, period, today):
     time.sleep(2)
     sm = yf.download(symbol, period=period)
