@@ -5,6 +5,6 @@ streamlit
 pandas
 numpy
 keyboard
-yfinance==0.2.36
+yfinance==0.2.29
 psutil
 prophet
