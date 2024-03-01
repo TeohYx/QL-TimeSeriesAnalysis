@@ -16,6 +16,8 @@ import plotly.express as px
 from prophet import Prophet
 
 from datetime import date
+
+import yfinance as yf
 # from fbprophet import Prophet
 # from fbprophet.plot import plot_plotly
 # import plotly.offline as py
@@ -311,6 +313,10 @@ def display_yearly(db, today):
         st.plotly_chart(fig_price_by_month, theme=None, use_container_width=True)
 
 def main():
+
+    test = yf.download("ZMH24.CBT", period='1y')
+    st.markdown(test)
+
     db = Database()
     today = date.today()
     print(f"Today: {today}")
