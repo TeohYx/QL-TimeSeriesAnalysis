@@ -22,6 +22,9 @@ import yfinance as yf
 # from fbprophet.plot import plot_plotly
 # import plotly.offline as py
 
+import appdirs as ad
+ad.user_cache_dir = lambda *args: "/tmp"
+
 """
 """
 def gather_basic_information(database, model=1):
