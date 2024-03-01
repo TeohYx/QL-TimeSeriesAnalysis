@@ -317,8 +317,8 @@ def display_yearly(db, today):
 
 def main():
 
-    test = yf.download("ZMH24.CBT", period='1y')
-    st.markdown(test)
+    # test = yf.download("ZMH24.CBT", period='1y')
+    # st.markdown(test)
 
     db = Database()
     today = date.today()
