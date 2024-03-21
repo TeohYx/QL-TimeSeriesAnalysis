@@ -77,7 +77,7 @@ def predict_LSTM_10days(db, today):
     # with wtab1:
     trained_model = Model("LSTM_10days", "model/LSTM_10days.h5", 10, 45, 4)
     model = trained_model.load_model()
-    window_size_data, extend_data, window_normal_data = LSTM_10days.prediction_data_for_LSTM_10days(db, trained_model.n_forecast, trained_model.n_window, "ZMH24.CBT", '1y', today)
+    window_size_data, extend_data, window_normal_data = LSTM_10days.prediction_data_for_LSTM_10days(db, trained_model.n_forecast, trained_model.n_window, "ZMV24.CBT", '1y', today)
     # print(window_normal_data)
     reference_start = window_normal_data.index[0]
     reference_end = window_normal_data.index[-1]
