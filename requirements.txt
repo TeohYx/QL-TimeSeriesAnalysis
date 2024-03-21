@@ -1,10 +1,10 @@
 tensorflow == 2.15.0
-matplotlib
+matplotlib 
 plotly
 streamlit
 pandas
 numpy
 keyboard
-yfinance
+yfinance == 0.2.36
 psutil
 prophet
