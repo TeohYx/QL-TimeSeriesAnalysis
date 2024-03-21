@@ -145,7 +145,7 @@ def get_history_to_latest_data(db, hist_data, today):
     latest_data = hist_data.index[-1]
 
 
-    sm = db.extract_data_from_yfinance("ZMH24.CBT", '1y', today)
+    sm = db.extract_data_from_yfinance("ZMV24.CBT", '1y', today)
     # print(sm)
     # print(latest_data)
 

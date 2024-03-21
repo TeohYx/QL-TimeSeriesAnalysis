@@ -106,7 +106,7 @@ class Database():
         df = self.df
         df.index = pd.to_datetime(df.index, format="%d/%m/%Y")
         target_map = df['Price US Soybean Meal'].to_dict()
-
+        print(prediction_df)
         #  Create timestamp of 10 days
         start_time = prediction_df.index[-1] + pd.Timedelta('1 days')
         end_time = start_time + pd.Timedelta(f'{n_forecast-1} days')
