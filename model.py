@@ -7,7 +7,7 @@ import os
 # from tensorflow.keras.losses import MeanSquaredError
 # from tensorflow.keras.metrics import RootMeanSquaredError
 # from tensorflow.keras.optimizers import Adam
-from tensorflow.keras.models import load_model
+from keras.models import load_model
 
 """
 THE CONFIGURATION IN TRAINING THE MODELS IS LISTED HERE
